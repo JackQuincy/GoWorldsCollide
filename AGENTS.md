@@ -7,6 +7,9 @@ The current goal is a careful port, not a redesign. Preserve behavior from the
 Python project unless a change is explicitly requested, and document intentional
 differences near the code that introduces them.
 
+Read `MIGRATION.md` before starting work. It records the source branch, completed
+work, compatibility decisions, migration order, and next recommended task.
+
 ## Project Shape
 
 The upstream Python repository is organized around these domains:
