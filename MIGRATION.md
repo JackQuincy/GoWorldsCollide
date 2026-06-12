@@ -79,11 +79,22 @@ Commit `62edc11` (`Port event instruction foundation`)
 
 ### Entity Instructions
 
+Commit `707641a` (`Port entity instructions`)
+
 - Ported entity action termination and pause instructions.
 - Ported movement and facing-direction opcode packing.
 - Preserved the upstream distance-eight clamp and warning.
 - Ported all five entity movement speeds.
 - Added Python golden-vector and boundary tests for every constructor.
+
+### Vehicle Instructions
+
+- Ported vehicle position and action termination instructions.
+- Ported set/clear event-bit instructions with upstream range validation.
+- Ported conditional and unconditional event-code branches, including symbolic
+  label resolution.
+- Ported fade and non-fade map loading through the shared event encoder.
+- Added Python golden-vector, event-bit boundary, and label-resolution tests.
 
 At this checkpoint, `go test ./...` and `go vet ./...` pass.
 
@@ -141,18 +152,17 @@ adjustment.
 
 ## Next Task
 
-Port `instruction/vehicle.py`.
+Port `instruction/world.py`.
 
 Suggested workflow:
 
 1. Inventory every class and call site in the upstream file.
-2. Implement the complete public surface under `internal/instruction/vehicle`.
+2. Implement the complete public surface under `internal/instruction/world`.
 3. Reuse `event.NewInstruction`, `event.NewBranch`, and `event.NewLoadMap`.
 4. Re-export or wrap shared entity instructions where the upstream wildcard
-   import makes them part of the vehicle surface.
+   import makes them part of the world surface.
 5. Generate representative golden byte sequences from Python.
-6. Add table-driven tests for event-bit, branch, position, and map-load
-   encodings.
+6. Add table-driven tests for castle, event-bit branch, and map-load encodings.
 7. Run:
 
 ```sh
