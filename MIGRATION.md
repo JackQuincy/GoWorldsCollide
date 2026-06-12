@@ -89,12 +89,28 @@ Commit `707641a` (`Port entity instructions`)
 
 ### Vehicle Instructions
 
+Commit `099b129` (`Port vehicle instructions`)
+
 - Ported vehicle position and action termination instructions.
 - Ported set/clear event-bit instructions with upstream range validation.
 - Ported conditional and unconditional event-code branches, including symbolic
   label resolution.
 - Ported fade and non-fade map loading through the shared event encoder.
 - Added Python golden-vector, event-bit boundary, and label-resolution tests.
+
+### World, Battle Event, And Field Entity Instructions
+
+- Ported the complete world-map instruction surface, including shared entity
+  actions, castle commands, map loading, and event-bit branches.
+- Ported battle-event targets, animation slots, dialogs, and script control.
+- Replaced upstream battle-event import-time ROM mutation with an explicit
+  `battleevent.InstallHandlers` operation.
+- Ported the C1 add/remove-target relocation, checks-complete handler, and
+  opcode-table updates.
+- Ported the complete field entity action surface, including all animations,
+  diagonal movement, entity constants, and label-based distance branches.
+- Added Python golden vectors, label tests, animation-slot tests, and exact C1
+  patch-output tests.
 
 At this checkpoint, `go test ./...` and `go vet ./...` pass.
 
@@ -152,17 +168,19 @@ adjustment.
 
 ## Next Task
 
-Port `instruction/world.py`.
+Port the core `instruction/field/instructions.py` surface.
 
 Suggested workflow:
 
-1. Inventory every class and call site in the upstream file.
-2. Implement the complete public surface under `internal/instruction/world`.
+1. Group constructors by script control, party, inventory, entity, display,
+   audio, map, event-bit, event-word, battle, and timer behavior.
+2. Implement pure encoders under `internal/instruction/field`.
 3. Reuse `event.NewInstruction`, `event.NewBranch`, and `event.NewLoadMap`.
-4. Re-export or wrap shared entity instructions where the upstream wildcard
-   import makes them part of the world surface.
-5. Generate representative golden byte sequences from Python.
-6. Add table-driven tests for castle, event-bit branch, and map-load encodings.
+4. Keep dynamic constructor families explicit and test generated opcode/bit
+   combinations against Python.
+5. Port helper instruction sequences only after their primitive encoders exist.
+6. Defer `field/custom.py` and `field/y_npc/` patch installers until their C0
+   and bank-specific dependencies are available.
 7. Run:
 
 ```sh
