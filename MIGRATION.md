@@ -66,6 +66,15 @@ Commit `9be5e3f` (`Port 65816 assembly instructions`)
 - Added Python golden-vector tests.
 - Added forward and backward branch tests through `memory.Space`.
 
+### Event Instruction Foundation
+
+- Ported recursive event instruction argument flattening.
+- Ported event branches with absolute addresses and symbolic 24-bit label
+  pointers relative to `EVENT_CODE_START`.
+- Ported shared map-load direction, music, transition, vehicle, and parent-map
+  flag packing.
+- Added Python golden-vector tests and forward label-resolution coverage.
+
 At this checkpoint, `go test ./...` and `go vet ./...` pass.
 
 ## Deferred Work
@@ -122,17 +131,16 @@ adjustment.
 
 ## Next Task
 
-Port `instruction/event.py`.
+Port `instruction/entity.py`.
 
 Suggested workflow:
 
 1. Inventory every class and call site in the upstream file.
-2. Identify shared event instruction encoding patterns.
-3. Implement the complete public surface under `internal/instruction/event`.
-4. Use `memory.Instruction` and `memory.Space` for label operands.
+2. Implement the complete public surface under `internal/instruction/entity`.
+3. Build each opcode with `event.NewInstruction`.
+4. Preserve movement, direction, speed, and pause argument packing.
 5. Generate representative golden byte sequences from Python.
-6. Add table-driven tests, including label-address subtraction from
-   `EVENT_CODE_START`.
+6. Add table-driven tests for every constructor and boundary value.
 7. Run:
 
 ```sh
